@@ -47,6 +47,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Config\config.json.example">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Config\config.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Concurrent;
+﻿using Dapper;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Navigator;
@@ -16,17 +15,20 @@ using Plus.HabboHotel.Users.Ignores;
 using Plus.HabboHotel.Users.Inventory;
 using Plus.HabboHotel.Users.Messenger;
 using Plus.HabboHotel.Users.Messenger.FriendBar;
+using Plus.HabboHotel.Users.Navigator;
 using Plus.HabboHotel.Users.Permissions;
 using Plus.HabboHotel.Users.Process;
+using Plus.Roleplay.Users;
 using Plus.Utilities;
-
-using Dapper;
-using Plus.HabboHotel.Users.Navigator;
+using System.Collections;
+using System.Collections.Concurrent;
 
 namespace Plus.HabboHotel.Users;
 
 public class Habbo
 {
+    public RPHabboData RPHabboData { get; set; }
+
     public HabboStats HabboStats { get; set; }
 
     private readonly DateTime _timeCached;

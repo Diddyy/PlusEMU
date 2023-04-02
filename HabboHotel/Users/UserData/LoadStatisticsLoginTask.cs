@@ -1,8 +1,8 @@
 ﻿using Plus.Core;
+using Plus.Database;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Subscriptions;
 using System.Data;
-using Plus.Database;
 
 namespace Plus.HabboHotel.Users.UserData;
 
@@ -58,7 +58,7 @@ internal class LoadStatisticsLoginTask : IUserDataLoadingTask
                 if (!PlusEnvironment.Game.GroupManager.TryGetGroup(stats.FavouriteGroupId, out g))
                     stats.FavouriteGroupId = 0;
 
-                habbo.HabboStats  = stats;
+                habbo.HabboStats = stats;
             }
             catch (Exception e)
             {

@@ -311,4 +311,8 @@ public static class ServerPacketHeader
     public const uint MessengerInitComposer = 1329; //391
     public const uint PollContentsComposer = 3826;
     public const uint PollOfferComposer = 1074;
+
+    //CUSTOM FOR NITRO
+    public const uint SendRPUserDataComposer = 9002;
+    public const uint SendRPUserInventoryComposer = 9004;
 }

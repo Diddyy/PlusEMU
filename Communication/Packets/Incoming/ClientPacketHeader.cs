@@ -315,6 +315,10 @@ public static class ClientPacketHeader
     public const uint SendMsgEvent = 2409; //1981
     public const uint CloseTicketEvent = 1080; //50
 
+    //CUSTOM FOR NITRO
+    public const uint GetRPUserInfoEvent = 9001;
+    public const uint GetRPUserCurrentInventoryEvent = 9003;
+
     //NotImplemented
 
     //Camera

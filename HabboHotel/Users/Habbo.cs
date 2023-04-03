@@ -19,6 +19,7 @@ using Plus.HabboHotel.Users.Navigator;
 using Plus.HabboHotel.Users.Permissions;
 using Plus.HabboHotel.Users.Process;
 using Plus.Roleplay.Users;
+using Plus.Roleplay.Users.Inventory;
 using Plus.Utilities;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -43,6 +44,7 @@ public class Habbo
 
     public IgnoresComponent IgnoresComponent { get; set; }
     public InventoryComponent Inventory { get; set; }
+    public RPInventoryComponent RPInventory { get; set; }
 
     public HabboMessenger Messenger { get; set; }
 

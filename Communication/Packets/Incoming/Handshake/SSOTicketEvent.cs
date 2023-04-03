@@ -6,6 +6,7 @@ using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Notifications;
+using Plus.Communication.Packets.Outgoing.RP.Users;
 using Plus.Communication.Packets.Outgoing.Sound;
 using Plus.Core.FigureData;
 using Plus.Core.Language;
@@ -108,6 +109,8 @@ public class SsoTicketEvent : IPacketEvent
                 _cacheManager.GenerateUser(session.GetHabbo().Id);
             session.GetHabbo().Look = _figureManager.ProcessFigure(session.GetHabbo().Look, session.GetHabbo().Gender, session.GetHabbo().Clothing.GetClothingParts, true);
             session.GetHabbo().InitProcess();
+            session.Send(new SendRPUserDataComposer(session.GetHabbo()));
+            session.Send(new SendRPUserInventoryComposer(session.GetHabbo()));
             if (session.GetHabbo().Permissions.HasRight("mod_tickets"))
             {
                 session.Send(new ModeratorInitComposer(

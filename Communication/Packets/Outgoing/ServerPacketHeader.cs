@@ -315,4 +315,5 @@ public static class ServerPacketHeader
     //CUSTOM FOR NITRO
     public const uint SendRPUserDataComposer = 9002;
     public const uint SendRPUserInventoryComposer = 9004;
+    public const uint UpdateRPItemPositionComposer = 9005;
 }

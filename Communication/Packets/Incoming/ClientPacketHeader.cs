@@ -318,7 +318,7 @@ public static class ClientPacketHeader
     //CUSTOM FOR NITRO
     public const uint GetRPUserInfoEvent = 9001;
     public const uint GetRPUserCurrentInventoryEvent = 9003;
-    public const uint UpdateRPItemPositionEvent = 9006;
+    public const uint UpdateRPItemPositionEvent = 9005;
 
     //NotImplemented
 

@@ -19,8 +19,12 @@ public class SendRPUserInventoryComposer : IServerPacket
 
         foreach (var item in inventoryItems)
         {
-            packet.WriteInteger(item.ItemSlot);
+            packet.WriteInteger(item.Id);
             packet.WriteInteger(item.ItemId);
+            packet.WriteInteger(item.ItemSlot);
+            packet.WriteInteger(item.Quantity);
+            packet.WriteInteger(item.Health);
+            packet.WriteInteger(item.RemainingUses);
         }
     }
 }

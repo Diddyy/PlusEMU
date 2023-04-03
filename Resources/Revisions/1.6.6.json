@@ -3,7 +3,7 @@
   "IncomingHeaders": {
     "GetRPUserInfoEvent": 9002,
     "GetRPUserCurrentInventoryEvent": 9004,
-    "UpdateRPItemPositionEvent": 9005,
+    "UpdateRPItemPositionEvent": 9006,
     "InitDiffieHandshakeEvent": 3110,
     "GenerateSecretKeyEvent": 773,
     "UniqueIdEvent": 2490,
@@ -275,7 +275,7 @@
   "OutgoingHeaders": {
     "SendRPUserDataComposer": 9001,
     "SendRPUserInventoryComposer": 9003,
-    "UpdateRPItemPositionComposer": 9006,
+    "UpdateRPItemPositionComposer": 9005,
     "InitCryptoComposer": 1347,
     "SecretKeyComposer": 3885,
     "AuthenticationOkComposer": 2491,

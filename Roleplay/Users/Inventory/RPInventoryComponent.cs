@@ -1,5 +1,8 @@
 ﻿using Dapper;
+using Plus.Communication.Packets.Outgoing.RP.Users;
 using Plus.Database;
+using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Users;
 using System.Collections.Concurrent;
 
 namespace Plus.Roleplay.Users.Inventory;
@@ -13,6 +16,13 @@ public class InventoryItem
     public int Quantity { get; set; }
     public int Health { get; set; }
     public int RemainingUses { get; set; }
+    public InventoryItem(int id, int itemId, int itemSlot, int quantity)
+    {
+        Id = id;
+        ItemId = itemId;
+        ItemSlot = itemSlot;
+        Quantity = quantity;
+    }
 }
 
 public class RPInventoryComponent
@@ -46,10 +56,33 @@ public class RPInventoryComponent
     {
         return _items.TryAdd(item.Id, item);
     }
+    public async Task<bool> AddNewItem(Habbo habbo, int itemId)
+    {
+        int freeSlot = FindFreeSlot(habbo);
+        if (freeSlot == -1)
+        {
+            habbo.Client.SendWhisper("You have no free inventory slots");
+            return false;
+        }
+
+        using var connection = _database.Connection();
+        int newItemId = await connection.ExecuteScalarAsync<int>("INSERT INTO `RP_user_items` (`user_id`, `item_id`, `item_slot`, `quantity`) VALUES (@userId, @itemId, @itemSlot, @quantity); SELECT LAST_INSERT_ID();", new
+        {
+            userId = habbo.Id,
+            itemId = itemId,
+            itemSlot = freeSlot,
+            quantity = 1
+        });
+
+        var newItem = new InventoryItem(newItemId, itemId, freeSlot, 1);
+        habbo.RPInventory.AddItem(newItem);
+        habbo.Client.Send(new SendRPUserInventoryComposer(habbo));
+        Console.WriteLine("ID: " + newItem.Id + "ItemID: " + newItem.ItemId + "ItemSlot: " + newItem.ItemSlot);
+        return true;
+    }
 
     public async Task UpdateItemPosition(int itemId, int position)
     {
-        Console.WriteLine($"Updating item position: itemId={itemId}, position={position}");
         var item = GetItem(itemId);
         if (item == null) return;
 
@@ -63,4 +96,27 @@ public class RPInventoryComponent
     public bool HasItem(int itemId) => _items.ContainsKey(itemId);
 
     public bool RemoveItem(int itemId) => _items.TryRemove(itemId, out _);
+
+    private int FindFreeSlot(Habbo habbo)
+    {
+        for (int slot = 3; slot <= 10; slot++)
+        {
+            bool slotTaken = false;
+            foreach (var item in habbo.RPInventory.AllItems)
+            {
+                if (item.ItemSlot == slot)
+                {
+                    slotTaken = true;
+                    break;
+                }
+            }
+
+            if (!slotTaken)
+            {
+                return slot;
+            }
+        }
+
+        return -1; // No free slot found
+    }
 }

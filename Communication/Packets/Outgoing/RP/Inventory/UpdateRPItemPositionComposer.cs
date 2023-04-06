@@ -17,7 +17,6 @@ public class UpdateRPItemPositionComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        Console.WriteLine("UpdateRPItemPositionComposer");
         packet.WriteInteger(_itemId);
         packet.WriteInteger(_newPosition);
     }

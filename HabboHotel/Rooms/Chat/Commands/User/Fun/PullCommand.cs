@@ -48,7 +48,7 @@ internal class PullCommand : ITargetChatCommand
         if (target.CurrentRoom!.Id == session.GetHabbo().CurrentRoom!.Id && Math.Abs(thisUser.X - targetUser.X) < 3 && Math.Abs(thisUser.Y - targetUser.Y) < 3)
         {
             room.SendPacket(new ChatComposer(thisUser.VirtualId, $"*pulls {parameters[1]} to them*", 0, thisUser.LastBubble));
-            if (thisUser.RotBody % 2 != 0) 
+            if (thisUser.RotBody % 2 != 0)
                 PullTarget(targetUser, thisUser.X, thisUser.Y, thisUser.RotBody - 1);
             else
                 PullTarget(targetUser, thisUser.X, thisUser.Y, thisUser.RotBody);
@@ -61,12 +61,12 @@ internal class PullCommand : ITargetChatCommand
     private void PullTarget(RoomUser targetUser, int X, int Y, int direction)
     {
         if (direction == 0)
-            targetUser.MoveTo(X, Y-1);
+            targetUser.MoveTo(X, Y - 1);
         else if (direction == 2)
-            targetUser.MoveTo(X+1, Y);
+            targetUser.MoveTo(X + 1, Y);
         else if (direction == 4)
-            targetUser.MoveTo(X, Y+1);
+            targetUser.MoveTo(X, Y + 1);
         else if (direction == 6)
-            targetUser.MoveTo(X-1, Y);
+            targetUser.MoveTo(X - 1, Y);
     }
 }

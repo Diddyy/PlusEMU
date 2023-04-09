@@ -4,6 +4,7 @@ using Plus.Communication.Packets.Outgoing.RP.Inventory;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
 using Plus.Roleplay.Users.Inventory;
+using Plus.Roleplay.Users.Items;
 using System.Collections.Concurrent;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User.RP.Corporations;
@@ -45,18 +46,27 @@ internal class SellCommand : ITargetChatCommand
 
         if (target.CurrentRoom!.Id == session.GetHabbo().CurrentRoom!.Id && Math.Abs(thisUser.X - targetUser.X) < 3 && Math.Abs(thisUser.Y - targetUser.Y) < 3)
         {
-            if (thisUser.CarryItemId == 1013)
+            int handItemId = thisUser.CarryItemId;
+            var itemData = RPItemLoader.GetItemDataByHandItemId(handItemId);
+
+            if (itemData != null)
             {
                 thisUser.HasActiveOffer = true;
                 targetUser.HasActiveOffer = true;
 
-                int offerId = _itemOffers.Count + 1; // Generate a new offer ID
-                int itemId = 30; // MedKit ID
-                int cost = 50; // MedKit cost
+                int offerId = _itemOffers.Count + 1;
+                int itemId = itemData.Id;
+                int cost = itemData.SellPrice;
+
+                string itemName = RPItemLoader.GetItemNameById(itemId);
                 _itemOffers.TryAdd(offerId, new ItemOffer(offerId, thisUser.UserId, target.Id, itemId, cost));
 
-                room.SendPacket(new ChatComposer(thisUser.VirtualId, $"*Offers {targetUser.GetUsername()} a {itemId} for {cost} coins", 0, thisUser.LastBubble));
+                room.SendPacket(new ChatComposer(thisUser.VirtualId, $"*Offers {targetUser.GetUsername()} a {itemName} for {cost} credits", 0, thisUser.LastBubble));
                 targetUser.GetClient().Send(new ItemOfferComposer(offerId, thisUser.GetClient().GetHabbo(), itemId, cost));
+            }
+            else
+            {
+                session.SendWhisper("You are not carrying a valid item to sell.");
             }
         }
         else
@@ -78,6 +88,7 @@ internal class SellCommand : ITargetChatCommand
         var sender = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(offer.SenderId);
         var room = session.GetHabbo().CurrentRoom;
         var target = room.GetRoomUserManager().GetRoomUserByHabbo(PlusEnvironment.GetUsernameById(offer.TargetId));
+        string itemName = RPItemLoader.GetItemNameById(offer.ItemId);
 
         if (accepted)
         {
@@ -94,8 +105,8 @@ internal class SellCommand : ITargetChatCommand
                 }
                 else
                 {
-                    sender.GetClient().SendWhisper("Unable to offer a medkit as user has no free inventory slots.");
-                    target.GetClient().SendWhisper("Unable to accept a medkit as you have no free inventory slots.");
+                    sender.GetClient().SendWhisper($"Unable to offer a {itemName} as user has no free inventory slots.");
+                    target.GetClient().SendWhisper($"Unable to accept a {itemName} as you have no free inventory slots.");
                 }
             }
             else
@@ -106,7 +117,7 @@ internal class SellCommand : ITargetChatCommand
         }
         else
         {
-            room.SendPacket(new ChatComposer(target.VirtualId, $"*Declines {sender.GetUsername()}'s offer", 0, target.LastBubble));
+            room.SendPacket(new ChatComposer(target.VirtualId, $"*Declines {sender.GetUsername()}'s offer of a {itemName}", 0, target.LastBubble));
         }
     }
 
@@ -120,6 +131,7 @@ internal class SellCommand : ITargetChatCommand
         var room = session.GetHabbo().CurrentRoom;
         var sender = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(offer.SenderId);
         var target = room.GetRoomUserManager().GetRoomUserByHabbo(PlusEnvironment.GetUsernameById(offer.TargetId));
+        string itemName = RPItemLoader.GetItemNameById(offer.ItemId);
 
         if (room!.Id == session.GetHabbo().CurrentRoom!.Id)
         {
@@ -128,7 +140,7 @@ internal class SellCommand : ITargetChatCommand
 
             // Close the dialog for the target user
             target.GetClient().Send(new ItemOfferResponseComposer(offerId, false));
-            room.SendPacket(new ChatComposer(target.VirtualId, $"*Declines {sender.GetUsername()}'s offer", 0, target.LastBubble));
+            room.SendPacket(new ChatComposer(target.VirtualId, $"*Declines {sender.GetUsername()}'s offer of a {itemName}", 0, target.LastBubble));
 
             sender.HasActiveOffer = false;
             target.HasActiveOffer = false;

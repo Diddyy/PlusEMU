@@ -319,6 +319,8 @@ public static class ClientPacketHeader
     public const uint GetRPUserInfoEvent = 9001;
     public const uint GetRPUserCurrentInventoryEvent = 9003;
     public const uint UpdateRPItemPositionEvent = 9005;
+    public const uint ItemOfferEvent = 9007;
+    public const uint ItemOfferResponseMessageEvent = 9009;
 
     //NotImplemented
 

@@ -316,4 +316,6 @@ public static class ServerPacketHeader
     public const uint SendRPUserDataComposer = 9002;
     public const uint SendRPUserInventoryComposer = 9004;
     public const uint UpdateRPItemPositionComposer = 9006;
+    public const uint ItemOfferComposer = 9008;
+    public const uint ItemOfferResponseComposer = 9010;
 }

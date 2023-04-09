@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Plus.Communication.Packets.Outgoing.RP.Users;
 using Plus.Database;
-using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
 using System.Collections.Concurrent;
 
@@ -61,7 +60,6 @@ public class RPInventoryComponent
         int freeSlot = FindFreeSlot(habbo);
         if (freeSlot == -1)
         {
-            habbo.Client.SendWhisper("You have no free inventory slots");
             return false;
         }
 
@@ -77,7 +75,6 @@ public class RPInventoryComponent
         var newItem = new InventoryItem(newItemId, itemId, freeSlot, 1);
         habbo.RPInventory.AddItem(newItem);
         habbo.Client.Send(new SendRPUserInventoryComposer(habbo));
-        Console.WriteLine("ID: " + newItem.Id + "ItemID: " + newItem.ItemId + "ItemSlot: " + newItem.ItemSlot);
         return true;
     }
 

@@ -12,13 +12,11 @@ public static class RPItemLoader
 
     public static List<InventoryItem> GetItemsForUser(int userId)
     {
-        // Check if the user items are already cached
         if (UserItemsCache.TryGetValue(userId, out List<InventoryItem> itemList))
         {
             return itemList;
         }
 
-        // If not cached, fetch the user items from the database
         itemList = new List<InventoryItem>();
         using (IQueryAdapter dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
@@ -45,7 +43,6 @@ public static class RPItemLoader
             }
         }
 
-        // Cache the user items for future use
         UserItemsCache.TryAdd(userId, itemList);
 
         return itemList;
@@ -60,19 +57,16 @@ public static class RPItemLoader
             dbClient.RunQuery();
         }
 
-        // Remove the user items from the cache
         UserItemsCache.TryRemove(userId, out _);
     }
 
     public static string GetItemNameById(int itemId)
     {
-        // Check if the RPItemData is already cached
         if (ItemDataCache.TryGetValue(itemId, out RPItemData itemData))
         {
             return itemData.ItemName;
         }
 
-        // If not cached, fetch the RPItemData from the database
         using (IQueryAdapter dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`, `item_name`, `allow_inventory_stack`, `is_equippable`, `equippable_type`, `handitem_id`, `sell_price` FROM `rp_items` WHERE `id` = @id;");
@@ -93,7 +87,6 @@ public static class RPItemLoader
             }
         }
 
-        // Cache the RPItemData for future use
         if (itemData != null)
         {
             ItemDataCache.TryAdd(itemId, itemData);
@@ -105,13 +98,11 @@ public static class RPItemLoader
 
     public static RPItemData GetItemDataByHandItemId(int handItemId)
     {
-        // Check if the RPItemData is already cached
         if (ItemDataCache.TryGetValue(handItemId, out RPItemData itemData))
         {
             return itemData;
         }
 
-        // If not cached, fetch the RPItemData from the database
         using (IQueryAdapter dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`, `item_name`, `allow_inventory_stack`, `is_equippable`, `equippable_type`, `sell_price` FROM `rp_items` WHERE `handitem_id` = @handItemId;");
@@ -132,7 +123,6 @@ public static class RPItemLoader
             }
         }
 
-        // Cache the RPItemData for future use
         if (itemData != null)
         {
             ItemDataCache.TryAdd(handItemId, itemData);

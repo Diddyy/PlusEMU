@@ -135,10 +135,8 @@ internal class SellCommand : ITargetChatCommand
 
         if (room!.Id == session.GetHabbo().CurrentRoom!.Id)
         {
-            // Remove the offer from the dictionary
             _itemOffers.TryRemove(offerId, out _);
 
-            // Close the dialog for the target user
             target.GetClient().Send(new ItemOfferResponseComposer(offerId, false));
             room.SendPacket(new ChatComposer(target.VirtualId, $"*Declines {sender.GetUsername()}'s offer of a {itemName}", 0, target.LastBubble));
 

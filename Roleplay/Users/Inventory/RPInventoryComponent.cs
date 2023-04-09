@@ -114,6 +114,6 @@ public class RPInventoryComponent
             }
         }
 
-        return -1; // No free slot found
+        return -1;
     }
 }

@@ -18,7 +18,7 @@ internal class SellCommand : ITargetChatCommand
     public string Description => "Sell the item you're holding to a target user";
     public bool MustBeInSameRoom => true;
 
-    private readonly ConcurrentDictionary<int, ItemOffer> _itemOffers;
+    internal readonly ConcurrentDictionary<int, ItemOffer> _itemOffers;
 
     public SellCommand()
     {
@@ -47,6 +47,9 @@ internal class SellCommand : ITargetChatCommand
         {
             if (thisUser.CarryItemId == 1013)
             {
+                thisUser.HasActiveOffer = true;
+                targetUser.HasActiveOffer = true;
+
                 int offerId = _itemOffers.Count + 1; // Generate a new offer ID
                 int itemId = 30; // MedKit ID
                 int cost = 50; // MedKit cost
@@ -106,4 +109,30 @@ internal class SellCommand : ITargetChatCommand
             room.SendPacket(new ChatComposer(target.VirtualId, $"*Declines {sender.GetUsername()}'s offer", 0, target.LastBubble));
         }
     }
+
+    public async Task OnUserMoved(GameClient session, int offerId)
+    {
+        if (!_itemOffers.TryGetValue(offerId, out var offer))
+        {
+            return;
+        }
+
+        var room = session.GetHabbo().CurrentRoom;
+        var sender = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(offer.SenderId);
+        var target = room.GetRoomUserManager().GetRoomUserByHabbo(PlusEnvironment.GetUsernameById(offer.TargetId));
+
+        if (room!.Id == session.GetHabbo().CurrentRoom!.Id)
+        {
+            // Remove the offer from the dictionary
+            _itemOffers.TryRemove(offerId, out _);
+
+            // Close the dialog for the target user
+            target.GetClient().Send(new ItemOfferResponseComposer(offerId, false));
+            room.SendPacket(new ChatComposer(target.VirtualId, $"*Declines {sender.GetUsername()}'s offer", 0, target.LastBubble));
+
+            sender.HasActiveOffer = false;
+            target.HasActiveOffer = false;
+        }
+    }
+
 }

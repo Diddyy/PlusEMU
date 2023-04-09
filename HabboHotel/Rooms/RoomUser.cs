@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Plus.Communication.Packets;
+﻿using Plus.Communication.Packets;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
 using Plus.HabboHotel.GameClients;
@@ -10,6 +9,7 @@ using Plus.HabboHotel.Rooms.Games.Freeze;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.PathFinding;
 using Plus.Utilities;
+using System.Drawing;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -88,6 +88,7 @@ public class RoomUser
     public bool UpdateNeeded;
     public int UserId;
     public int VirtualId;
+    public bool HasActiveOffer { get; set; }
 
     public int X; //byte
     public int Y; //byte

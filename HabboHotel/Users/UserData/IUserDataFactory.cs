@@ -6,4 +6,5 @@ public interface IUserDataFactory
     Task<string> GetUsernameForHabboById(int userId);
     Task<bool> HabboExists(int userId);
     Task<bool> HabboExists(string username);
+    Task<Habbo?> GetUserDataByIdAsync(int userId);
 }
